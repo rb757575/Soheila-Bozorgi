@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>clock t;
+int counterA = 0;
+int counterB = 0;
+chan change;</declaration>
+	<template>
+		<name>LightB</name>
+		<location id="id0" x="-595" y="42">
+			<name x="-605" y="8">GreenB</name>
+		</location>
+		<location id="id1" x="-263" y="42">
+			<name x="-273" y="8">YellowB</name>
+		</location>
+		<location id="id2" x="-433" y="-221">
+			<name x="-443" y="-255">RedB</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-577" y="-123">t &gt;= 5</label>
+			<label kind="assignment" x="-577" y="-89">counterB++, t = 0</label>
+		</transition>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-415" y="-123">t &gt;= 2</label>
+			<label kind="assignment" x="-415" y="-89">t = 0</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-578" y="85">counterB &gt;= 5 &amp;&amp; t &gt;= 5</label>
+			<label kind="synchronisation" x="-577" y="25">change!</label>
+			<label kind="assignment" x="-577" y="42">counterB = 0, t = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LightA</name>
+		<location id="id6" x="-595" y="25">
+			<name x="-605" y="-9">GreenA</name>
+		</location>
+		<location id="id7" x="-408" y="-229">
+			<name x="-418" y="-263">RedA</name>
+		</location>
+		<location id="id8" x="-246" y="25">
+			<name x="-256" y="-9">YellowA</name>
+		</location>
+		<init ref="id7"/>
+		<transition id="id9">
+			<source ref="id7"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-680" y="-178">t &gt;= 5</label>
+			<label kind="assignment" x="-680" y="-144">counterA++, t = 0</label>
+		</transition>
+		<transition id="id10">
+			<source ref="id8"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-272" y="-153">t &gt;= 2</label>
+			<label kind="assignment" x="-255" y="-127">t = 0</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id6"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-450" y="76">counterA &gt;= 5 &amp;&amp; t &gt;= 5</label>
+			<label kind="synchronisation" x="-577" y="8">change?</label>
+			<label kind="assignment" x="-450" y="34">counterA = 0, t = 0</label>
+		</transition>
+	</template>
+	<system>system LightA, LightB;
+</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; LightB.YellowB</formula>
+			<comment>آیا چراغ B به حالت Yellow میرود؟</comment>
+		</query>
+	</queries>
+</nta>

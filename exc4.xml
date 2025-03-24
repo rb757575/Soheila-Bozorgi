@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+clock t;
+
+chan toGreen, toRed;
+
+</declaration>
+	<template>
+		<name x="5" y="5">Template</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id0" x="0" y="0">
+		</location>
+		<init ref="id0"/>
+	</template>
+	<template>
+		<name>LightA</name>
+		<location id="id1" x="-544" y="-170">
+			<name x="-554" y="-204">GreenA</name>
+		</location>
+		<location id="id2" x="-264" y="-170">
+			<name x="-274" y="-204">YellowA</name>
+		</location>
+		<location id="id3" x="-400" y="-391">
+			<name x="-410" y="-425">RedA</name>
+		</location>
+		<init ref="id3"/>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id2"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-553" y="-340">t &gt;= 2</label>
+			<label kind="synchronisation" x="-612" y="-399">toGreen!</label>
+			<label kind="assignment" x="-570" y="-280">t = 0</label>
+		</transition>
+		<transition id="id6">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-306" y="-297">t &gt;= 1</label>
+			<label kind="synchronisation" x="-306" y="-323">toRed!</label>
+			<label kind="assignment" x="-298" y="-272">t = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LightB</name>
+		<location id="id7" x="-552" y="-289">
+			<name x="-562" y="-323">GreenB</name>
+		</location>
+		<location id="id8" x="-306" y="-289">
+			<name x="-316" y="-323">YellowB</name>
+		</location>
+		<location id="id9" x="-416" y="-484">
+			<name x="-426" y="-518">RedB</name>
+		</location>
+		<init ref="id7"/>
+		<transition id="id10">
+			<source ref="id9"/>
+			<target ref="id7"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id9"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-680" y="-476">t &gt;= 2</label>
+			<label kind="synchronisation" x="-697" y="-416">toGreen?</label>
+			<label kind="assignment" x="-680" y="-442">t = 0</label>
+		</transition>
+		<transition id="id12">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-357" y="-434">t &gt;= 1</label>
+			<label kind="assignment" x="-357" y="-408">t = 0</label>
+		</transition>
+		<transition id="id13">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-501" y="-306">t &gt;= 3</label>
+			<label kind="assignment" x="-476" y="-348">t = 0</label>
+		</transition>
+	</template>
+	<system>system LightA, LightB;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

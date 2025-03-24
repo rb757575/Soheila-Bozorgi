@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>clock t1, t2;
+chan change;
+int carsWaiting = 0;
+urgent chan ambulanceDetected;
+
+</declaration>
+	<template>
+		<name x="5" y="5">TrafficLight1</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="-10" y="-34">Green</name>
+			<label kind="invariant" x="0" y="42">t1 &lt;= 10</label>
+		</location>
+		<location id="id1" x="272" y="0">
+			<name x="262" y="-34">Red</name>
+		</location>
+		<location id="id2" x="119" y="-221">
+			<name x="109" y="-255">Yellow</name>
+		</location>
+		<location id="id3" x="-331" y="-93">
+			<name x="-341" y="-127">CarDetected</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id3"/>
+			<target ref="id1"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="68" y="-76">ambulanceDetected?</label>
+			<label kind="assignment" x="59" y="-102">carsWaiting = 0, t1 = 0</label>
+			<nail x="136" y="-76"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-238" y="17">carsWaiting &gt; 0</label>
+			<label kind="assignment" x="-289" y="34">carsWaiting = carsWaiting - 1</label>
+			<nail x="-161" y="68"/>
+			<nail x="-144" y="25"/>
+		</transition>
+		<transition id="id7">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="263" y="68">t1 := 0</label>
+			<nail x="323" y="119"/>
+		</transition>
+		<transition id="id8">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-8" y="136">carsWaiting &gt; 0</label>
+			<label kind="assignment" x="-110" y="161">carsWaiting = carsWaiting - 1</label>
+			<nail x="-25" y="161"/>
+			<nail x="51" y="102"/>
+		</transition>
+		<transition id="id9">
+			<source ref="id0"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-384" y="-175">carsWaiting &lt; 10</label>
+			<label kind="assignment" x="-391" y="-153">carsWaiting = carsWaiting + 1</label>
+		</transition>
+		<transition id="id10">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="51" y="-25">carsWaiting &gt; 0</label>
+			<label kind="synchronisation" x="153" y="8">change?</label>
+			<label kind="assignment" x="51" y="-8">t1 := 0</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="212" y="-161">t1 &gt;= 2</label>
+			<label kind="synchronisation" x="137" y="-127">change!</label>
+			<label kind="assignment" x="212" y="-127">t1 := 0</label>
+		</transition>
+		<transition id="id12">
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-8" y="-153">t1 &gt;= 5</label>
+			<label kind="assignment" x="-8" y="-119">t1 := 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>TrafficLight2</name>
+		<location id="id13" x="0" y="0">
+			<name x="-10" y="-34">Red</name>
+		</location>
+		<location id="id14" x="314" y="0">
+			<name x="304" y="-34">Green</name>
+		</location>
+		<location id="id15" x="153" y="-238">
+			<name x="168" y="-246">Yellow</name>
+		</location>
+		<init ref="id13"/>
+		<transition id="id16">
+			<source ref="id15"/>
+			<target ref="id13"/>
+			<label kind="guard" x="18" y="-153">t2 &gt;= 2</label>
+			<label kind="synchronisation" x="18" y="-136">change!</label>
+			<label kind="assignment" x="18" y="-119">t2 := 0</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id14"/>
+			<target ref="id15"/>
+			<label kind="guard" x="171" y="-153">t2 &gt;= 5</label>
+			<label kind="assignment" x="171" y="-119">t2 := 0</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id13"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="18" y="-17">change?</label>
+			<label kind="assignment" x="18" y="0">t2 := 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>Ambulance</name>
+		<location id="id19" x="0" y="0">
+			<name x="-10" y="-34">Idle</name>
+		</location>
+		<init ref="id19"/>
+		<transition id="id20">
+			<source ref="id19"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="18" y="-106">ambulanceDetected!</label>
+			<nail x="229" y="-178"/>
+			<nail x="212" y="161"/>
+		</transition>
+	</template>
+	<system>system TrafficLight1, TrafficLight2, Ambulance;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>
