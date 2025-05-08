@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>chan change1, change2, done1, done2, reset;
+clock x;
+
+</declaration>
+	<template>
+		<name x="5" y="5">trafficLight1</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id0" x="-586" y="-76">
+			<name x="-596" y="-110">Red</name>
+		</location>
+		<location id="id1" x="-229" y="-76">
+			<name x="-239" y="-110">Green</name>
+			<label kind="invariant" x="-239" y="-59">x &lt;= 5</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id2">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-347" y="-127">reset?</label>
+			<nail x="-365" y="-144"/>
+			<nail x="-365" y="-144"/>
+			<nail x="-527" y="-144"/>
+		</transition>
+		<transition id="id3">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-373" y="-55">x &gt;= 5</label>
+			<label kind="synchronisation" x="-373" y="-38">done1!</label>
+			<label kind="assignment" x="-373" y="-21">x = 0</label>
+			<nail x="-391" y="34"/>
+			<nail x="-391" y="34"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-449" y="-97">change1?</label>
+		</transition>
+	</template>
+	<template>
+		<name>trafficLight2</name>
+		<location id="id5" x="144" y="34">
+			<name x="134" y="0">Red</name>
+		</location>
+		<location id="id6" x="493" y="34">
+			<name x="483" y="0">Green</name>
+			<label kind="invariant" x="483" y="51">x &lt;= 5</label>
+		</location>
+		<init ref="id5"/>
+		<transition id="id7">
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="246" y="-93">reset?</label>
+			<nail x="408" y="-59"/>
+			<nail x="408" y="-59"/>
+			<nail x="408" y="-59"/>
+			<nail x="204" y="-59"/>
+		</transition>
+		<transition id="id8">
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="guard" x="289" y="178">x &gt;= 5</label>
+			<label kind="synchronisation" x="281" y="106">done2!</label>
+			<label kind="assignment" x="289" y="161">x = 0</label>
+			<nail x="323" y="153"/>
+		</transition>
+		<transition id="id9">
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="162" y="17">change2?</label>
+		</transition>
+	</template>
+	<template>
+		<name>controller</name>
+		<location id="id10" x="-212" y="-161">
+			<name x="-222" y="-195">Start</name>
+		</location>
+		<location id="id11" x="102" y="-161">
+			<name x="92" y="-195">Wait1</name>
+		</location>
+		<location id="id12" x="-51" y="59">
+			<name x="-61" y="25">Wait2</name>
+		</location>
+		<location id="id13" x="-306" y="-25">
+			<name x="-316" y="-59">Wait3</name>
+		</location>
+		<init ref="id10"/>
+		<transition id="id14">
+			<source ref="id12"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-194" y="-68">reset!</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id10"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-296" y="-178">reset!</label>
+			<nail x="-314" y="-161"/>
+			<nail x="-314" y="-161"/>
+			<nail x="-272" y="-229"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id13"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-288" y="-110">done2?</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id12"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-288" y="0">change2!</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-33" y="-68">done1?</label>
+		</transition>
+		<transition id="id19">
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-194" y="-178">change1!</label>
+		</transition>
+	</template>
+	<system>system trafficLight1, trafficLight2, controller;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

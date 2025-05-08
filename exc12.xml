@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>clock t;
+</declaration>
+	<template>
+		<name x="5" y="5">trafficLight</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="-10" y="-34">red</name>
+			<label kind="invariant" x="-10" y="17">t &lt;= 5</label>
+		</location>
+		<location id="id1" x="340" y="8">
+			<name x="330" y="-26">green</name>
+			<label kind="invariant" x="330" y="25">t &lt;= 5</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id2">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="119" y="-102">t &gt;= 5</label>
+			<label kind="assignment" x="196" y="-21">t := 0</label>
+			<nail x="178" y="-51"/>
+		</transition>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="153" y="85">t &gt;= 5</label>
+			<label kind="assignment" x="18" y="34">t := 0</label>
+			<nail x="178" y="68"/>
+		</transition>
+	</template>
+	<system>system trafficLight;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

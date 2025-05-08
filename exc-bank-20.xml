@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>
+clock t;
+broadcast chan takeNumber, callNext;
+const int N = 3;
+typedef int[0,N-1] id;
+  </declaration>
+	<template>
+		<name>Customer</name>
+		<parameter>id i</parameter>
+		<declaration>clock x;</declaration>
+		<location id="id0" x="-400" y="-200">
+			<name x="-420" y="-230">Idle</name>
+		</location>
+		<location id="id1" x="-200" y="-200">
+			<name x="-210" y="-230">Waiting</name>
+		</location>
+		<location id="id2" x="-200" y="0">
+			<name x="-190" y="-30">Served</name>
+		</location>
+		<location id="id3" x="-400" y="0">
+			<name x="-420" y="-30">Done</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-310" y="-210">takeNumber?</label>
+			<label kind="assignment" x="-310" y="-190">x := 0</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-210" y="-100">callNext?</label>
+			<label kind="assignment" x="-210" y="-80">x := 0</label>
+		</transition>
+		<transition id="id6">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-300" y="20">x &gt;= 2</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id3"/>
+			<target ref="id0"/>
+		</transition>
+	</template>
+	<template>
+		<name>QueueSystem</name>
+		<declaration>clock t;</declaration>
+		<location id="id8" x="-400" y="-200">
+			<name x="-420" y="-230">Ready</name>
+		</location>
+		<location id="id9" x="-200" y="-200">
+			<name x="-230" y="-230">WaitingTime</name>
+		</location>
+		<init ref="id8"/>
+		<transition id="id10">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-310" y="-210">takeNumber!</label>
+			<label kind="assignment" x="-310" y="-190">t := 0</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-250" y="-100">t &gt;= 3</label>
+			<label kind="synchronisation" x="-250" y="-80">callNext!</label>
+		</transition>
+	</template>
+	<system>system QueueSystem, Customer;</system>
+	<queries>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment>بررسی ددلاک</comment>
+		</query>
+	</queries>
+</nta>

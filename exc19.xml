@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>clock x, y; chan change;</declaration>
+	<template>
+		<name>TrafficLight</name>
+		<declaration>// Local declarations</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="-10" y="-20">Green</name>
+		</location>
+		<location id="id1" x="150" y="0">
+			<name x="140" y="-20">Yellow</name>
+		</location>
+		<location id="id2" x="75" y="100">
+			<name x="65" y="80">Red</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="70" y="-30">x &gt;= 5</label>
+			<label kind="assignment" x="70" y="-10">x := 0</label>
+		</transition>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="120" y="30">x &gt;= 2</label>
+			<label kind="assignment" x="120" y="50">x := 0</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="20" y="80">change?</label>
+			<label kind="assignment" x="20" y="100">x := 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>Controller</name>
+		<declaration>// No local declarations</declaration>
+		<location id="id6" x="0" y="0">
+			<name x="-10" y="-20">Start</name>
+		</location>
+		<location id="id7" x="150" y="0">
+			<name x="140" y="-20">NS_Green</name>
+		</location>
+		<location id="id8" x="8" y="127">
+			<name x="-2" y="107">EW_Green</name>
+		</location>
+		<init ref="id6"/>
+		<transition id="id9">
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="20" y="-10">change!</label>
+			<label kind="assignment" x="20" y="10">y := 0</label>
+		</transition>
+		<transition id="id10">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="246" y="56">y &gt;= 10</label>
+			<label kind="synchronisation" x="246" y="76">change!</label>
+			<label kind="assignment" x="246" y="93">y := 0</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id8"/>
+			<target ref="id7"/>
+			<label kind="guard" x="60" y="130">y &gt;= 10</label>
+			<label kind="synchronisation" x="60" y="150">change!</label>
+			<label kind="assignment" x="60" y="170">y := 0</label>
+			<nail x="246" y="119"/>
+		</transition>
+	</template>
+	<system>system TrafficLight, Controller;
+
+</system>
+	<queries>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment>Check for absence of deadlocks</comment>
+		</query>
+	</queries>
+</nta>

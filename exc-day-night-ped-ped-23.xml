@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>clock x; clock t; clock c;
+chan dayTime, nightTime;
+chan request, allow;
+bool isDay = true;
+bool gotRequest = false;</declaration>
+	<template>
+		<name>TrafficLight</name>
+		<declaration>clock t;</declaration>
+		<location id="id0" x="-238" y="-187">
+			<name x="-248" y="-217">Green</name>
+		</location>
+		<location id="id1" x="77" y="-195">
+			<name x="67" y="-225">Yellow</name>
+		</location>
+		<location id="id2" x="-85" y="-59">
+			<name x="-95" y="-89">Red</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-228" y="-237">dayTime?</label>
+			<label kind="assignment" x="-161" y="-195">isDay := true</label>
+			<nail x="-131" y="-225"/>
+			<nail x="-71" y="-225"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="17" y="-210">nightTime?</label>
+			<label kind="assignment" x="17" y="-195">isDay := false</label>
+			<nail x="52" y="-229"/>
+			<nail x="107" y="-225"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-374" y="-312">request?</label>
+			<label kind="assignment" x="-416" y="-263">gotRequest := true</label>
+			<nail x="-365" y="-323"/>
+			<nail x="-263" y="-323"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-204" y="-340">isDay &amp;&amp; t &gt;= 5 &amp;&amp; gotRequest</label>
+			<label kind="assignment" x="-153" y="-314">t := 0</label>
+			<nail x="-136" y="-289"/>
+		</transition>
+		<transition id="id7">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-17" y="-119">t &gt;= 2</label>
+			<label kind="assignment" x="-17" y="-89">t := 0</label>
+		</transition>
+		<transition id="id8">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-221" y="-111">t &gt;= 2</label>
+			<label kind="synchronisation" x="-221" y="-96">allow!</label>
+			<label kind="assignment" x="-399" y="-76">t := 0, gotRequest := false</label>
+		</transition>
+	</template>
+	<template>
+		<name>Pedestrian</name>
+		<declaration>clock t;</declaration>
+		<location id="id9" x="-187" y="-136">
+			<name x="-197" y="-166">Idle</name>
+		</location>
+		<location id="id10" x="25" y="-17">
+			<name x="15" y="-47">Wait</name>
+		</location>
+		<location id="id11" x="221" y="-136">
+			<name x="211" y="-166">Cross</name>
+		</location>
+		<init ref="id9"/>
+		<transition id="id12">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-141" y="-91">request!</label>
+			<label kind="assignment" x="-141" y="-76">t := 0</label>
+		</transition>
+		<transition id="id13">
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="63" y="-91">allow?</label>
+			<label kind="assignment" x="63" y="-76">t := 0</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id11"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-43" y="-166">t &gt;= 3</label>
+		</transition>
+	</template>
+	<template>
+		<name>DayNight</name>
+		<location id="id15" x="-246" y="-110">
+			<name x="-256" y="-140">Day</name>
+		</location>
+		<location id="id16" x="34" y="-93">
+			<name x="24" y="-123">Night</name>
+		</location>
+		<init ref="id15"/>
+		<transition id="id17">
+			<source ref="id16"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-204" y="-17">c &gt;= 60</label>
+			<label kind="synchronisation" x="-204" y="0">dayTime!</label>
+			<label kind="assignment" x="-195" y="17">c := 0</label>
+			<nail x="-102" y="25"/>
+		</transition>
+		<transition id="id18">
+			<source ref="id15"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-170" y="-119">c &gt;= 60</label>
+			<label kind="synchronisation" x="-187" y="-136">nightTime!</label>
+			<label kind="assignment" x="-166" y="-101">c := 0</label>
+		</transition>
+	</template>
+	<system>system Pedestrian, TrafficLight, DayNight;</system>
+	<queries>
+		<query>
+			<formula>A[] not deadlock
+
+</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-04-16 12:45:49 +0200">
+			</result>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

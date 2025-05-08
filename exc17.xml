@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>clock x;
+chan start;
+</declaration>
+	<template>
+		<name x="5" y="5">Machine</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id0" x="-552" y="-42">
+			<name x="-562" y="-76">Idle</name>
+		</location>
+		<location id="id1" x="-246" y="-34">
+			<name x="-256" y="-68">Active</name>
+			<label kind="invariant" x="-256" y="-17">x &lt;= 10</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id2">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-381" y="-127">x &gt;= 10</label>
+			<nail x="-399" y="-153"/>
+		</transition>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-535" y="-25">start?</label>
+			<label kind="assignment" x="-534" y="-42">x := 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>User</name>
+		<location id="id4" x="-263" y="-127">
+			<name x="-273" y="-161">IdleUser</name>
+		</location>
+		<location id="id5" x="127" y="-127">
+			<name x="117" y="-161">Pressed</name>
+		</location>
+		<init ref="id4"/>
+		<transition id="id6">
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-84" y="-97">x &gt;= 2</label>
+			<nail x="-102" y="0"/>
+			<nail x="-102" y="0"/>
+		</transition>
+		<transition id="id7">
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-177" y="-152">start!</label>
+		</transition>
+	</template>
+	<system>system Machine, User;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

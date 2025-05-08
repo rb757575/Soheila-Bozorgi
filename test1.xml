@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>
+// Game positions
+int pos1 = 0, pos2 = 5;
+const int WIN_POS1 = 5, WIN_POS2 = 0;
+
+// Game control
+int turn = 1; // 1: Player1's turn, 2: Player2's turn
+bool gameOver = false;
+
+// Channels
+chan turn1, turn2, win1, win2;
+
+int rank1 = 3; 
+int rank2 = 2; 
+
+bool p1ReadyToWin = false;
+bool p2ReadyToWin = false;
+</declaration>
+	<template>
+		<name>Player1</name>
+		<declaration>clock x;</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="-10" y="-30">Idle</name>
+		</location>
+		<location id="id1" x="306" y="0">
+			<name x="296" y="-30">Move</name>
+			<label kind="invariant" x="327" y="8">x &lt;= 2</label>
+		</location>
+		<location id="id2" x="0" y="150">
+			<name x="-10" y="120">Win</name>
+			<committed/>
+		</location>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-297" y="-76">pos1 == pos2 &amp;&amp; rank1 &lt; rank2</label>
+			<label kind="assignment" x="-212" y="-51">pos1--</label>
+			<nail x="-161" y="-42"/>
+			<nail x="-25" y="-68"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="34" y="8">pos1 == pos2 &amp;&amp; rank1 &lt; rank2</label>
+			<label kind="assignment" x="68" y="17">pos1 = pos1 - 1</label>
+			<nail x="136" y="42"/>
+			<nail x="136" y="42"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-34" y="-170">turn == 1 &amp;&amp; !gameOver &amp;&amp; (pos1 != pos2 || rank1 &gt;= rank2)</label>
+			<label kind="synchronisation" x="17" y="-153">turn1!</label>
+			<label kind="assignment" x="8" y="-136">pos1++, x = 0, turn = 2</label>
+			<nail x="76" y="-85"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="34" y="153">pos1 == WIN_POS1</label>
+			<label kind="synchronisation" x="59" y="102">win1!</label>
+			<label kind="assignment" x="25" y="127">p1ReadyToWin = true</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="34" y="-17">x &gt;= 2 &amp;&amp; pos1 != WIN_POS1</label>
+		</transition>
+		<transition id="id8">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="-170" y="34">pos1 = 0, gameOver = true</label>
+		</transition>
+	</template>
+	<template>
+		<name>Player2</name>
+		<declaration>clock y;</declaration>
+		<location id="id9" x="0" y="0">
+			<name x="-10" y="-30">Idle</name>
+		</location>
+		<location id="id10" x="331" y="8">
+			<name x="321" y="-22">Move</name>
+			<label kind="invariant" x="318" y="16">y &lt;= 2</label>
+		</location>
+		<location id="id11" x="0" y="150">
+			<name x="-10" y="120">Win</name>
+			<committed/>
+		</location>
+		<init ref="id9"/>
+		<transition id="id12">
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-84" y="-46">pos2 == pos1 &amp;&amp; rank2 &lt; rank1</label>
+			<label kind="assignment" x="-84" y="-12">pos2++</label>
+			<nail x="-102" y="-25"/>
+			<nail x="17" y="-127"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="guard" x="17" y="17">pos2 == pos1 &amp;&amp; rank2 &lt; rank1</label>
+			<label kind="assignment" x="76" y="8">pos2 = pos2 + 1</label>
+			<nail x="85" y="42"/>
+		</transition>
+		<transition id="id14">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="guard" x="51" y="-85">turn == 2 &amp;&amp; !gameOver &amp;&amp; (pos2 != pos1 || rank2 &gt;= rank1)</label>
+			<label kind="synchronisation" x="42" y="-102">turn2!</label>
+			<label kind="assignment" x="34" y="-119">pos2--, y = 0, turn = 1</label>
+			<nail x="68" y="-51"/>
+		</transition>
+		<transition id="id15">
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="guard" x="68" y="136">pos2 == WIN_POS2</label>
+			<label kind="synchronisation" x="68" y="153">win2!</label>
+			<label kind="assignment" x="68" y="170">p2ReadyToWin = true</label>
+		</transition>
+		<transition id="id16">
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="guard" x="110" y="-34">y &gt;= 2 &amp;&amp; pos2 != WIN_POS2</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id11"/>
+			<target ref="id9"/>
+			<label kind="assignment" x="-229" y="51">pos2 = 5, gameOver = true</label>
+		</transition>
+	</template>
+	<template>
+		<name>Controller</name>
+		<location id="id18" x="0" y="0">
+			<name x="-10" y="-30">Control</name>
+		</location>
+		<location id="id19" x="200" y="0">
+			<name x="190" y="-30">P1Win</name>
+		</location>
+		<location id="id20" x="0" y="150">
+			<name x="-10" y="120">P2Win</name>
+		</location>
+		<location id="id21" x="-238" y="0">
+			<name x="-248" y="-34">Start</name>
+		</location>
+		<init ref="id21"/>
+		<transition id="id22">
+			<source ref="id21"/>
+			<target ref="id18"/>
+			<label kind="guard" x="-221" y="17">gameOver == false</label>
+			<label kind="assignment" x="-221" y="0">turn = 1</label>
+		</transition>
+		<transition id="id23">
+			<source ref="id18"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="100" y="-50">turn1?</label>
+			<nail x="50" y="-50"/>
+			<nail x="150" y="-50"/>
+		</transition>
+		<transition id="id24">
+			<source ref="id18"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="51" y="34">turn2?</label>
+			<nail x="50" y="50"/>
+			<nail x="150" y="50"/>
+		</transition>
+		<transition id="id25">
+			<source ref="id18"/>
+			<target ref="id19"/>
+			<label kind="guard" x="238" y="25">!p2ReadyToWin || rank1 &gt; rank2</label>
+			<label kind="synchronisation" x="187" y="25">win1?</label>
+			<nail x="197" y="53"/>
+		</transition>
+		<transition id="id26">
+			<source ref="id18"/>
+			<target ref="id20"/>
+			<label kind="guard" x="-357" y="110">!p1ReadyToWin || rank2 &gt; rank1</label>
+			<label kind="synchronisation" x="-76" y="110">win2?</label>
+			<nail x="-85" y="127"/>
+		</transition>
+		<transition id="id27">
+			<source ref="id19"/>
+			<target ref="id18"/>
+			<label kind="assignment" x="153" y="-8">gameOver = false, turn = 1</label>
+		</transition>
+		<transition id="id28">
+			<source ref="id20"/>
+			<target ref="id18"/>
+			<label kind="assignment" x="-17" y="76">gameOver = false, turn = 1</label>
+		</transition>
+	</template>
+	<system>system Player1, Player2, Controller;
+</system>
+	<queries>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment>Ensure no deadlocks</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Player1.Win</formula>
+			<comment>Player1 can win</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Player2.Win</formula>
+			<comment>Player2 can win</comment>
+		</query>
+		<query>
+			<formula>A[] not deadlock
+</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2025-05-02 12:51:51 +0200">
+			</result>
+		</query>
+		<query>
+			<formula>A[] not deadlock
+</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2025-05-05 14:04:08 +0200">
+			</result>
+		</query>
+	</queries>
+</nta>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>
+    chan change1, done1;
+    chan change2, done2;
+  </declaration>
+	<template>
+		<name>trafficLight1</name>
+		<location id="id0" x="-535" y="-144">
+			<name x="-545" y="-178">red1</name>
+		</location>
+		<location id="id1" x="-280" y="-144">
+			<name x="-290" y="-178">green1</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id2">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-442" y="-187">change1?</label>
+		</transition>
+		<transition id="id3">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-467" y="-159">done1!</label>
+			<nail x="-399" y="-238"/>
+		</transition>
+	</template>
+	<template>
+		<name>trafficLight2</name>
+		<location id="id4" x="-816" y="-119">
+			<name x="-826" y="-149">red2</name>
+		</location>
+		<location id="id5" x="-476" y="-110">
+			<name x="-486" y="-140">green2</name>
+		</location>
+		<init ref="id4"/>
+		<transition id="id6">
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-671" y="-59">change2?</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-672" y="-129">done2!</label>
+			<nail x="-637" y="-8"/>
+		</transition>
+	</template>
+	<template>
+		<name>controller</name>
+		<location id="id8" x="-306" y="-76">
+			<name x="-316" y="-106">Start</name>
+		</location>
+		<location id="id9" x="-8" y="-68">
+			<name x="-18" y="-98">Wait1</name>
+		</location>
+		<location id="id10" x="-161" y="144">
+			<name x="-171" y="114">Wait2</name>
+		</location>
+		<location id="id11" x="-348" y="127">
+			<name x="-358" y="97">Wait3</name>
+		</location>
+		<init ref="id8"/>
+		<transition id="id12">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-217" y="-87">change1!</label>
+		</transition>
+		<transition id="id13">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-144" y="23">done1?</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-90" y="129">change2!</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id11"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-163" y="19">done2?</label>
+		</transition>
+	</template>
+	<system>
+    system trafficLight1, trafficLight2, controller;
+  </system>
+	<queries>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment>بررسی نبود وضعیت بن‌بست</comment>
+		</query>
+	</queries>
+</nta>
