@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>
+const int N = 2;
+broadcast chan greenA, greenB;
+bool carA_here[N], carB_here[N];
+int queueA = 0, queueB = 0;
+
+</declaration>
+	<template>
+		<name>CarA</name>
+		<parameter>int id</parameter>
+		<declaration>clock tc;</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="-10" y="-30">Idle</name>
+			<label kind="exponentialrate" x="-10" y="20">1.0</label>
+		</location>
+		<location id="id1" x="150" y="0">
+			<name x="140" y="-30">Arrive</name>
+			<label kind="invariant" x="140" y="17">true</label>
+			<label kind="exponentialrate" x="140" y="34">1.0</label>
+		</location>
+		<location id="id2" x="150" y="150">
+			<name x="140" y="120">Wait</name>
+			<label kind="invariant" x="140" y="165">tc &lt;= 10</label>
+		</location>
+		<location id="id3" x="0" y="150">
+			<name x="-10" y="120">Pass</name>
+			<label kind="invariant" x="-10" y="165">tc &lt;= 3</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="15" y="0">queueA++, carA_here[id] = true</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="90" y="75">tc = 0</label>
+		</transition>
+		<transition id="id6">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="15" y="120">tc &gt;= 2</label>
+			<label kind="synchronisation" x="15" y="135">greenA?</label>
+			<label kind="assignment" x="15" y="150">queueA--, tc = 0</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-60" y="45">tc &gt;= 1</label>
+			<label kind="assignment" x="-60" y="75">carA_here[id] = false</label>
+		</transition>
+	</template>
+	<template>
+		<name>CarB</name>
+		<parameter>int id</parameter>
+		<declaration>clock tc;</declaration>
+		<location id="id8" x="0" y="0">
+			<name x="-10" y="-30">Idle</name>
+			<label kind="exponentialrate" x="-10" y="20">1.0</label>
+		</location>
+		<location id="id9" x="150" y="0">
+			<name x="140" y="-30">Arrive</name>
+			<label kind="invariant" x="140" y="17">true</label>
+			<label kind="exponentialrate" x="140" y="34">1.0</label>
+		</location>
+		<location id="id10" x="150" y="150">
+			<name x="140" y="120">Wait</name>
+			<label kind="invariant" x="140" y="165">tc &lt;= 10</label>
+		</location>
+		<location id="id11" x="0" y="150">
+			<name x="-10" y="120">Pass</name>
+			<label kind="invariant" x="-10" y="165">tc &lt;= 3</label>
+		</location>
+		<init ref="id8"/>
+		<transition id="id12">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="assignment" x="15" y="0">queueB++, carB_here[id] = true</label>
+		</transition>
+		<transition id="id13">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="assignment" x="90" y="75">tc = 0</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="guard" x="15" y="120">tc &gt;= 2</label>
+			<label kind="synchronisation" x="15" y="135">greenB?</label>
+			<label kind="assignment" x="15" y="150">queueB--, tc = 0</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id11"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-60" y="45">tc &gt;= 1</label>
+			<label kind="assignment" x="-60" y="75">carB_here[id] = false</label>
+		</transition>
+	</template>
+	<template>
+		<name>TrafficLight</name>
+		<declaration>clock t;</declaration>
+		<location id="id16" x="-25" y="8">
+			<name x="-35" y="-22">RedA_GreenB</name>
+			<label kind="invariant" x="-35" y="30">t &lt;= 5</label>
+		</location>
+		<location id="id17" x="212" y="8">
+			<name x="202" y="-22">GreenA_RedB</name>
+			<label kind="invariant" x="202" y="38">t &lt;= 5</label>
+		</location>
+		<init ref="id16"/>
+		<transition id="id18">
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="guard" x="76" y="-68">t &gt;= 5</label>
+			<label kind="synchronisation" x="68" y="-93">greenA!</label>
+			<label kind="assignment" x="76" y="-51">t = 0</label>
+		</transition>
+		<transition id="id19">
+			<source ref="id17"/>
+			<target ref="id16"/>
+			<label kind="guard" x="85" y="59">t &gt;= 3</label>
+			<label kind="synchronisation" x="110" y="34">greenB!</label>
+			<label kind="assignment" x="119" y="76">t = 0</label>
+			<nail x="85" y="93"/>
+		</transition>
+	</template>
+	<system>
+CarA0 = CarA(0);
+CarA1 = CarA(1);
+CarB0 = CarB(0);
+CarB1 = CarB(1);
+TL = TrafficLight();
+system CarA0, CarA1, CarB0, CarB1, TL;
+</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; CarA0.Pass</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-06-26 20:04:45 +0200">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; CarA0.Pass and CarB0.Pass</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-06-26 20:06:08 +0200">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; CarA0.Pass and CarB0.Pass and CarA1.Pass and CarB1.Pass</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-06-30 15:42:07 +0200">
+			</result>
+		</query>
+	</queries>
+</nta>
